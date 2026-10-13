@@ -1,0 +1,3 @@
+import type {Metadata} from 'next'; import ArticleArchive from '@/components/ArticleArchive'; import {articles} from '@/lib/sanity';
+export const metadata:Metadata={title:'Articles',description:'Biblical teaching, devotional reflections, and theological writing from Temitope Ayegbusi.'};
+export default async function ArticlesPage(){const all:any[]=await articles();return <><section className="page-hero"><div className="container"><div className="eyebrow">The journal</div><h1>Articles & reflections</h1><p>Writing to help us slow down, attend to Scripture, and consider what it means to know Christ and live in the light of His truth.</p></div></section><section className="archive-content"><div className="container"><ArticleArchive articles={all}/></div></section></>}

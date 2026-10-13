@@ -1,0 +1,15 @@
+import {createClient} from '@sanity/client';
+export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '';
+export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+export const sanityConfigured = Boolean(projectId && projectId !== 'replace-me');
+export const sanity = createClient({projectId:projectId || 'placeholder',dataset,apiVersion:'2025-02-19',useCdn:true, perspective:'published', token:process.env.SANITY_API_READ_TOKEN});
+export const settingsQuery = `*[_type == "siteSettings"] | order(_updatedAt desc)[0]{...}`;
+export const articlesQuery = `*[_type == "article" && defined(slug.current)] | order(publishedAt desc){_id,title,"slug":slug.current,subtitle,excerpt,publishedAt,updatedAt,author,featured,tags,"categories":categories[]->{name,"slug":slug.current},coverImage{...,alt},seoTitle,seoDescription}`;
+export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug][0]{_id,title,"slug":slug.current,subtitle,excerpt,body,publishedAt,updatedAt,author,featured,tags,"categories":categories[]->{name,"slug":slug.current},coverImage{...,alt},seoTitle,seoDescription}`;
+export const resourcesQuery = `*[_type == "resource" && defined(slug.current)] | order(publishedAt desc){_id,title,"slug":slug.current,description,type,"category":category->{name,"slug":slug.current},coverImage{...,alt},audioUrl,downloadUrl,notes,publishedAt,featured}`;
+export const resourceBySlugQuery = `*[_type == "resource" && slug.current == $slug][0]{_id,title,"slug":slug.current,description,type,"category":category->{name,"slug":slug.current},coverImage{...,alt},audioUrl,downloadUrl,notes,publishedAt,featured}`;
+export const settings = async () => sanityConfigured ? sanity.fetch(settingsQuery).catch(()=>null) : null;
+export const articles = async () => sanityConfigured ? sanity.fetch(articlesQuery).catch(()=>[]) : [];
+export const articleBySlug = async (slug:string) => sanityConfigured ? sanity.fetch(articleBySlugQuery,{slug}).catch(()=>null) : null;
+export const resources = async () => sanityConfigured ? sanity.fetch(resourcesQuery).catch(()=>[]) : [];
+export const resourceBySlug = async (slug:string) => sanityConfigured ? sanity.fetch(resourceBySlugQuery,{slug}).catch(()=>null) : null;

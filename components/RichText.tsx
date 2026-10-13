@@ -1,0 +1,3 @@
+import {PortableText} from 'next-sanity'; import imageUrlBuilder from '@sanity/image-url'; import {sanity} from '@/lib/sanity';
+const builder=imageUrlBuilder(sanity);
+export default function RichText({value}:{value:any[]}){return <div className="prose"><PortableText value={value} components={{types:{image:({value}:any)=>{const src=value?.asset?builder.image(value).width(1400).auto('format').url():undefined;return <figure>{src&&<img src={src} alt={value.alt||''} loading="lazy"/>}{value.alt&&<figcaption>{value.alt}</figcaption>}</figure>}},marks:{link:({children,value}:any)=><a href={value?.href} target={value?.href?.startsWith('http')?'_blank':undefined} rel={value?.href?.startsWith('http')?'noreferrer':undefined}>{children}</a>}}}/></div>}
