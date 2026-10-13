@@ -16,13 +16,23 @@ const sampleResources = [
 ];
 
 export default async function Home(){
-  const [s,allArticles,allResources]:any[] = await Promise.all([settings(),articles(),resources()]);
+  const [s,allArticles,allResources]:any[] = await Promise.all([settings(),articles(),resources()]);const portraitUrl = s?.portrait?.asset?.url;
   const featuredArticles=(allArticles||[]).filter((a:any)=>a.featured).slice(0,3);
   const featuredResources=(allResources||[]).filter((r:any)=>r.featured).slice(0,3);
   return <>
     <section className="hero hero-image"><div className="hero-shade"/><div className="container hero-content"><div className="eyebrow">A ministry of the Word</div><h1>{s?.homeHeadline||'Pursuing the knowledge of Christ.'}</h1><p className="hero-copy">{s?.homeIntro||'Biblical truth, devotional reflections, and resources to help believers grow in their understanding of God and His Word.'}</p><div className="button-row"><Link className="button button-primary" href="/articles">Explore Articles <ArrowRight size={16}/></Link><Link className="button button-secondary hero-outline" href="/community">Join Petra’s Community <ArrowUpRight size={15}/></Link></div><div className="hero-footnote">“That I may know him…” <span>— Philippians 3:10</span></div></div></section>
 
-    <section className="section section-white"><div className="container two-col intro-grid"><div><div className="eyebrow">A personal introduction</div><h2>Faith that seeks to understand.</h2><p className="section-intro">This is a place for careful reflection on Scripture, the person of Christ, and the shape of a life formed by the truth of God’s Word.</p><p className="section-intro">{s?.biography||'Learn more about Temitope Ayegbusi and the heart behind this ministry.'}</p><Link className="text-link" href="/contact">Get in touch <ArrowUpRight size={15}/></Link></div><div className="portrait-placeholder" role="img" aria-label="Portrait of Temitope Ayegbusi to be added"><div className="portrait-inner"><div className="portrait-initials">T.A.</div><strong>Temitope Ayegbusi</strong><span>Ministry and teaching</span></div></div></div></section>
+    <section className="section section-white"><div className="container two-col intro-grid"><div><div className="eyebrow">A personal introduction</div><h2>Faith that seeks to understand.</h2><p className="section-intro">This is a place for careful reflection on Scripture, the person of Christ, and the shape of a life formed by the truth of God’s Word.</p><p className="section-intro">{s?.biography||'Learn more about Temitope Ayegbusi and the heart behind this ministry.'}</p><Link className="text-link" href="/contact">Get in touch <ArrowUpRight size={15}/></Link></div><div className="portrait-placeholder" role="img" aria-label="Portrait of Temitope Ayegbusi">
+  {portraitUrl ? (
+    <img src={portraitUrl} alt="Temitope Ayegbusi" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top',display:'block'}} />
+  ) : (
+    <div className="portrait-inner">
+      <div className="portrait-initials">T.A.</div>
+      <strong>Temitope Ayegbusi</strong>
+      <span>Ministry and teaching</span>
+    </div>
+  )}
+</div></div></section>
 
     <section className="section featured-section"><div className="container"><div className="section-heading"><div><div className="eyebrow">Read, reflect, grow</div><h2>Thoughtful writing for the life of faith.</h2><p className="section-intro">Biblical teaching, devotional writing, and theological reflections intended to invite deeper attention to Christ and Scripture.</p></div><Link className="text-link" href="/articles">All articles <ArrowRight size={15}/></Link></div>{featuredArticles.length?<div className="article-grid">{featuredArticles.map((a:any)=><ArticleCard key={a._id} article={a}/>)}</div>:<div className="article-grid">{sampleArticles.map((a)=><article className="visual-article-card" key={a.title}><Link className="visual-card-image" href="/articles" aria-label={`Explore articles: ${a.title}`}><img src={a.image} alt=""/></Link><div className="visual-card-copy"><span className="card-meta">{a.category}</span><h3><Link href="/articles">{a.title}</Link></h3><p>{a.excerpt}</p><Link className="text-link" href="/articles">Read reflections <ArrowRight size={14}/></Link></div></article>)}</div>}</div></section>
 
